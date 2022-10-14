@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as ProductActions from '../store/actions/product.action';
+import * as CartActions from '../store/actions/cart.action';
 
 class Product extends Component {
   componentDidMount() {
@@ -10,7 +11,7 @@ class Product extends Component {
     loadProducts();
   }
   render() {
-    const {products} = this.props;
+    const {products, addProductToCart} = this.props;
     return (
       <section className='container content-section'>
         <h2 className='section-header'>商品列表</h2>
@@ -22,7 +23,11 @@ class Product extends Component {
                 <span className='shop-item-title'>{product.title}</span>
                 <div className='shop-item-details'>
                   <span className='shop-item-price'>￥{product.price}</span>
-                  <button className='btn btn-primary shop-item-button' type='button'>
+                  <button
+                    className='btn btn-primary shop-item-button'
+                    type='button'
+                    onClick={() => addProductToCart(product.id)}
+                  >
                     加入购物车
                   </button>
                 </div>
@@ -37,5 +42,8 @@ class Product extends Component {
 const mapStateToProps = state => ({
   products: state.products
 });
-const mapDispatchToProps = dispatch => bindActionCreators(ProductActions, dispatch);
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators(ProductActions, dispatch),
+  ...bindActionCreators(CartActions, dispatch)
+});
 export default connect(mapStateToProps, mapDispatchToProps)(Product);
